@@ -1,0 +1,26 @@
+CREATE TABLE Predictors AS
+SELECT c.CustomerID, c.TerritoryID, p.TotalPurchaseYTD, p.DateFirstPurchase, p.MaritalStatus,
+		p.YearlyIncome, p.Gender, p.TotalChildren, p.NumberChildrenAtHome, p.Education,
+		p.Occupation, p.HomeOwnerFlag, p.NumberCarsOwned, p.CommuteDistance,
+		(2007-substr(p.BirthDate, 7)) AS Age
+FROM Customer c, Person p
+WHERE p.BusinessEntityID = c.PersonID AND p.PersonType= 'IN'
+ORDER BY c.CustomerID;
+
+CREATE TABLE BoughtBike AS
+SELECT DISTINCT h.CustomerID
+FROM SalesOrderHeader h
+LEFT JOIN SalesOrderDetail d ON h.SalesOrderID = d.SalesOrderID
+LEFT JOIN Product p ON d.ProductID = p.ProductID
+WHERE p.ProductSubcategoryID = 1 OR p.ProductSubcategoryID = 2 OR p.ProductSubcategoryID = 3
+ORDER BY h.CustomerID;
+
+CREATE TABLE Final AS
+SELECT p.CustomerID, p.TerritoryID, p.TotalPurchaseYTD, p.DateFirstPurchase, p.MaritalStatus,
+		p.YearlyIncome, p.Gender, p.TotalChildren, p.NumberChildrenAtHome, p.Education,
+		p.Occupation, p.HomeOwnerFlag, p.NumberCarsOwned, p.CommuteDistance, p.Age,
+		CASE
+			WHEN b.CustomerID is NOT NULL THEN '1'
+			ELSE '0'
+		END AS Bike
+FROM Predictors p LEFT JOIN BoughtBike b ON p.CustomerID = b.CustomerID;
