@@ -9,7 +9,7 @@ library(stats)
 install.packages('stats')
 
 
-Final<-read.csv('C:\\Users\\hoffm\\Documents\\Final.csv')
+Final<-read.csv('C:\\Users\\hoffm\\Documents\\BikeData.csv')
 Final$Bike = as.factor(Final$Bike)
 Final$TerritoryID = as.factor(Final$TerritoryID)
 Final$HomeOwnerFlag = as.factor(Final$HomeOwnerFlag)
